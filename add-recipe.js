@@ -16,8 +16,13 @@ function isRecipeNameValid() {
     const recipeNameError = document.getElementById('recipeNameError');
 
     // Return false if recipe name is empty or already exists
-    if (recipeNameExists(recipeName) || !recipeName) {
+    if (recipeNameExists(recipeName)) {
         recipeNameError.textContent = 'A recipe with this name already exists';
+        return false;
+    }
+
+    if (!recipeName) {
+        recipeNameError.textContent = 'Recipe name cannot be empty';
         return false;
     }
 
@@ -100,8 +105,14 @@ function isApplicationNameValid() {
     }
 
     // Check if application name input is valid
-    if (applicationNameExists(applicationName) || !applicationName) {
+     // TODO: Use the right error message
+    if (applicationNameExists(applicationName)) {
         applicationNameError.textContent = 'An application with this name already exists.';
+        return false;
+    }
+
+    if (!applicationName) {
+        applicationNameError.textContent = 'Application name cannot be empty.';
         return false;
     }
 
@@ -206,25 +217,52 @@ function removeReagentRow(button) {
 }
 
 
-// TODO: Check name of all reagents
-function handleReagentNameInput(nameInputTd) {
-    const nameInput = nameInputTd.querySelector('.reagent-name-input');
-    const reagentName = nameInput.value.trim();
-    const reagentNameId = nameInput.id;
-    const reagentNameError = nameInputTd.querySelector('.reagent-name-error');
-    const saveRecipeButton = document.getElementById('saveRecipeButton');
-    
-    // Disable if name is empty or if name already exists
-    if (!reagentName) {
-        saveRecipeButton.disabled = true;
-    } else if (reagentNameExists(reagentName, reagentNameId)) {
-        reagentNameError.textContent = 'A reagent with this name already exists'
-        saveRecipeButton.disabled = true;
-    } else {
-        saveRecipeButton.disabled = false;
-        reagentNameError.textContent = '';
+// Function to check if name of all reagents are valid
+function areReagentNamesValid() {
+    const reagentNamesInputs = document.querySelectorAll('.reagent-name-input');
+    const reagentNamesArray = Array.from(reagentNamesInputs).map((inputElement) => inputElement.value);
+
+    // Check for empty values
+    const emptyValueIndices = reagentNamesArray.reduce((acc, name, index) => {
+        if (name === '') {
+            acc.push(index);
+        }
+        return acc;
+    }, []);
+
+    emptyValueIndices.forEach((index) => {
+        const errorElement = reagentNamesInputs[index].parentNode.querySelector('.reagent-name-error');
+        errorElement.textContent = 'A reagent name cannot be empty';
+    });
+
+    // Check for duplicated names
+    const duplicates = reagentNamesArray.reduce((acc, name, index) => {
+        if (reagentNamesArray.indexOf(name) !== index) {
+            acc.push(index);
+        }
+        return acc;
+    }, []);
+
+    duplicates.forEach((index) => {
+        const errorElement = reagentNamesInputs[index].parentNode.querySelector('.reagent-name-error');
+        errorElement.textContent = 'A reagent with this name already exists.';
+    });
+
+    if (emptyValueIndices.length > 0 || duplicates.length > 0) {
+        return false;
     }
+
+    // Reset error messages
+    const reagentNamesErrors = document.querySelectorAll('.reagent-name-error');
+    reagentNamesErrors.forEach((errorElement) => {
+        errorElement.textContent = '';
+    })
+    return true;
+
 }
+
+
+// TODO: Function to check if all values for concentration are inserted and valid
 
 
 
@@ -346,13 +384,6 @@ window.addEventListener('load', () => {
     // Enable the "Save Recipe" button and add its event listener
     const saveRecipeButton = document.getElementById('saveRecipeButton');
     saveRecipeButton.addEventListener('click', saveRecipe);
-
-    // Add event listener for recipe name input change
-    const recipeNameInput = document.getElementById('recipeName');
-    recipeNameInput.addEventListener('input', handleRecipeNameInput);
-
-    // Call the handleRecipeNameInput function once to initialize the button state
-    handleRecipeNameInput();
 
     // Add event listener for application field change
     const applicationField = document.getElementById('applicationField');
