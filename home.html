@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biochemical Solutions | Home</title>
+</head>
+
+<body>
+    <h1>Biochemical Solutions</h1>
+
+    <button><a href="add-recipe.html">Add recipe</a></button>
+
+    <h2>Recipe Selection</h2>
+    <div id="search-bar">
+        <input type="text" id="searchInput" oninput="searchSolutions()" placeholder="Search for solutions...">
+        <div id="applicationFilter"></div> <!-- Add this line -->
+    </div>
+    <div id="recipes">
+        <!-- The dynamically generated list of matching solutions will appear here -->
+    </div>
+
+
+    <script src="search-recipe.js"></script>
+</body>
+
+</html>

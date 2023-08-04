@@ -1,0 +1,121 @@
+[
+    {
+        "name": "Solution A",
+        "application": "Cell Culture",
+        "reagents": [
+            {
+                "name": "Reagent 1",
+                "stockConcentration": {
+                    "value": 10,
+                    "unit": "g/mol"
+                },
+                "finalConcentration": {
+                    "value": 0.1,
+                    "unit": "M"
+                }
+            },
+            {
+                "name": "Reagent 2",
+                "stockConcentration": {
+                    "value": 5,
+                    "unit": "g/mol"
+                },
+                "finalConcentration": {
+                    "value": 0.001,
+                    "unit": "M"
+                }
+            }
+        ],
+        "protocol": [
+            "Step 1: Mix Reagent 1 and Reagent 2",
+            "Step 2: Add Water to make the final volume"
+        ]
+    },
+    {
+        "name": "Solution B",
+        "application": "Biochemical",
+        "reagents": [
+            {
+                "name": "Reagent 3",
+                "stockConcentration": {
+                    "value": 20,
+                    "unit": "g/mol"
+                },
+                "finalConcentration": {
+                    "value": 0.05,
+                    "unit": "M"
+                }
+            }
+        ],
+        "protocol": [
+            "Step 1: Dissolve Reagent 3 in Buffer",
+            "Step 2: Adjust pH if needed",
+            "Step 3: Add Water to make the final volume"
+        ]
+    },
+    {
+        "name": "Solution D",
+        "application": "Cell Culture",
+        "reagents": [
+            {
+                "name": "Reagent 1",
+                "stockConcentration": {
+                    "value": 10,
+                    "unit": "X"
+                },
+                "finalConcentration": {
+                    "value": 1,
+                    "unit": "X"
+                }
+            },
+            {
+                "name": "Reagent 2",
+                "stockConcentration": {
+                    "value": 5,
+                    "unit": "M"
+                },
+                "finalConcentration": {
+                    "value": 0.001,
+                    "unit": "M"
+                }
+            }
+        ],
+        "protocol": [
+            "Step 1: Mix Reagent 1 and Reagent 2",
+            "Step 2: Add Water to make the final volume"
+        ]
+    },
+    {
+        "name": "Solution C",
+        "application": "Biochemical",
+        "reagents": [
+            {
+                "name": "Reagent 3",
+                "stockConcentration": {
+                    "value": 20,
+                    "unit": "M"
+                },
+                "finalConcentration": {
+                    "value": 0.05,
+                    "unit": "M"
+                }
+            },
+            {
+                "name": "Reagent 4",
+                "stockConcentration": {
+                    "value": 5,
+                    "unit": "mg/mL"
+                },
+                "finalConcentration": {
+                    "value": 100,
+                    "unit": "ug/mL"
+                }
+            }
+        ],
+        "protocol": [
+            "Step 1: Dissolve Reagent 3 and Reagent 4 in Buffer",
+            "Step 2: Adjust pH if needed",
+            "Step 3: Add Water to make the final volume"
+        ]
+    }
+]
