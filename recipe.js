@@ -94,10 +94,10 @@ function calculateReagentQuantities() {
 
         } else if (concentrationUnitsMol.hasOwnProperty(stockConcentrationUnit)) { // if M to M
             // Convert stockConcentrationValue to M
-            stockM = stockConcentrationValue / concentrationUnitsMol[stockConcentrationUnit];
+            stockM = stockConcentrationValue * concentrationUnitsMol[stockConcentrationUnit];
 
             // Convert finalConcentrationValue to M
-            finalM = finalConcentrationValue / concentrationUnitsMol[finalConcentrationUnit];
+            finalM = finalConcentrationValue * concentrationUnitsMol[finalConcentrationUnit];
 
             // Calculate final volume
             quantityToTake = finalM * finalVolume / stockM; // in L
