@@ -255,6 +255,15 @@ function removeReagentRow(button) {
 function areReagentNamesValid() {
     const reagentNamesInputs = document.querySelectorAll('.reagent-name-input');
     const reagentNamesArray = Array.from(reagentNamesInputs).map((inputElement) => inputElement.value);
+    const reagentErrorElement = document.getElementById('reagentsError1');
+
+    // If empty, return
+    if (reagentNamesInputs.length === 0) {
+        reagentErrorElement.textContent = 'Please insert reagents';
+        return false;
+    } else {
+        reagentErrorElement.textContent = '';
+    }
 
     // Check for empty values
     const emptyValueIndices = reagentNamesArray.reduce((acc, name, index) => {
@@ -296,7 +305,7 @@ function areReagentNamesValid() {
 }
 
 
-// TODO: Function to check if all values for concentration are inserted and valid
+// Function to check if all values for concentration are inserted and valid
 function areConcentrationValuesValid() {
     let areValid = true;
     const finalVolume = 1; // set final volume to check if the solution is ok
@@ -304,7 +313,7 @@ function areConcentrationValuesValid() {
 
     const reagentErrorElement = document.getElementById('reagentsError');
 
-    // TODO: For each row, 
+    // For each row, 
     const reagentRows = document.querySelectorAll('.reagent-row');
 
     reagentRows.forEach((row) => {
@@ -355,7 +364,7 @@ function areConcentrationValuesValid() {
             return
         }
 
-        // TODO: Check if final concentration is < stock concentration
+        // Check if final concentration is < stock concentration
         if (stockConcentrationUnit === 'g/mol') {
             return
         } else if (concentrationUnitsMol.hasOwnProperty(stockConcentrationUnit)) { // if M to M
@@ -420,7 +429,6 @@ function areConcentrationValuesValid() {
     } else {
         reagentErrorElement.textContent = ''
     }
-    console.log(testVolume)
     return areValid;
 }
 
@@ -433,36 +441,102 @@ function addProtocolStep() {
     const protocolStepsList = document.getElementById('protocolStepsList');
 
     const newStep = document.createElement('li');
-    newStep.innerHTML = '<input type="text" required>';
+    newStep.className = 'protocol-step-li';
+    newStep.innerHTML = `
+    <input class="protocol-step-input" type="text" required>
+    <td><button type="button" onclick="removeStep(this)">Remove</button></td>
+    <div class="protocol-step-error" style="color: red;"></div>
+    `;
     protocolStepsList.appendChild(newStep);
+}
+
+
+// Function to remove a protol step
+function removeStep(button) {
+    const step = button.parentNode;
+    const steplist = step.parentNode;
+    steplist.removeChild(step);
+}
+
+
+function areProtocolStepsValid() {
+    let areValid = true;
+    const protocolSteps = document.querySelectorAll('.protocol-step-li');
+    const protocoltErrorElement = document.getElementById('protocolError');
+
+    // If empty, return
+    if (protocolSteps.length === 0) {
+        protocoltErrorElement.textContent = 'Please insert steps.';
+        return false;
+    } else {
+        protocoltErrorElement.textContent = '';
+    }
+
+    protocolSteps.forEach((step) => {
+        const stepInput = step.querySelector('.protocol-step-input');
+        const stepErrorElement = step.querySelector('.protocol-step-error');
+
+        if (stepInput.value === '') {
+            stepErrorElement.textContent = 'Please fill the step input field or delete it.';
+            areValid = false;
+        } else {
+            stepErrorElement.textContent = '';
+        }
+    });
+
+    return areValid
 }
 
 
 
 // ------------- SAVE ------------------------------
 
+// function that returns whether all checks are valid
+function checkAllValid() {
+    // Call each validation function and store the results in separate variables
+    const isRecipeNameValidResult = isRecipeNameValid();
+    const isApplicationNameValidResult = isApplicationNameValid();
+    const areReagentNamesValidResult = areReagentNamesValid();
+    const areConcentrationValuesValidResult = areConcentrationValuesValid();
+    const areProtocolStepsValidResult = areProtocolStepsValid(); 
 
-
-
+    // Combine the results using logical AND (&&) to ensure all of them are evaluated
+    return (
+        isRecipeNameValidResult &&
+        isApplicationNameValidResult &&
+        areReagentNamesValidResult &&
+        areConcentrationValuesValidResult &&
+        areProtocolStepsValidResult 
+    );
+}
 
 
 // Function to handle form submission and save the new recipe
 function saveRecipe(event) {
     event.preventDefault();
 
+    // Stop if not all checks are valid
+    if (!checkAllValid()) {return}
+
+    // Get name and application field
     const recipeName = document.getElementById('recipeName').value;
-    const applicationField = document.getElementById('applicationField').value;
+    let applicationField = document.getElementById('applicationField').value;
+
+    // Check if Application field is "Other..." and store real value 
+    if (applicationField === "Other...") {
+        applicationField = document.getElementById('newApplicationInput').value;
+    }
 
     // Get the reagents data from the table
     const reagentsTable = document.getElementById('reagentsTable');
     const reagents = [];
-    for (let i = 0; i < reagentsTable.rows.length; i++) {
+    for (let i = 1; i < reagentsTable.rows.length; i++) {
         const row = reagentsTable.rows[i];
-        const name = row.cells[0].querySelector('input').value;
-        const stockConcentration = parseFloat(row.cells[1].querySelector('input').value);
-        const stockUnit = row.cells[2].querySelector('select').value;
-        const finalConcentration = parseFloat(row.cells[3].querySelector('input').value);
-        const finalUnit = row.cells[4].querySelector('select').value;
+        const name = row.querySelector('.reagent-name-input').value;
+        const stockConcentration = parseFloat(row.querySelector('.stock-concentration-value').value);
+        const stockUnit = row.querySelector('.stock-concentration-unit').value;
+        const finalConcentration = parseFloat(row.querySelector('.final-concentration-value').value);
+        const finalUnit = row.querySelector('.final-concentration-value').value;
 
         reagents.push({
             name: name,
@@ -481,19 +555,22 @@ function saveRecipe(event) {
         protocolSteps.push(step);
     }
 
+    // Get current date
+    const date = new Date();
+    let currentDay= String(date.getDate()).padStart(2, '0');
+    let currentMonth = String(date.getMonth()+1).padStart(2,"0");
+    let currentYear = date.getFullYear();
+    let currentDate = `${currentYear}-${currentMonth}-${currentDay}`;
+
     // Create the new recipe object
     const newRecipe = {
         name: recipeName,
         application: applicationField,
         reagents: reagents,
         protocol: protocolSteps,
+        date_added: currentDate,
+        date_modified: currentDate,
     };
-
-    // Check if the recipe name already exists
-    if (recipeNameExists(recipeName)) {
-        alert('Recipe name already exists. Please choose a different name.');
-        return;
-    }
 
     // Add the new recipe to the recipes array
     recipes.push(newRecipe);
@@ -526,10 +603,6 @@ window.addEventListener('load', () => {
 
 // Add form submission event listener
 document.getElementById('addRecipeForm').addEventListener('submit', saveRecipe);
-
-
-
-
 
 
 // Load and display the recipes when the page loads
