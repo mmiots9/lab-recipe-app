@@ -1,5 +1,7 @@
 // add_recipe.js
 let recipes = []; // Initialize the recipes array
+const recipeToEdit = JSON.parse(localStorage.getItem('selectedRecipe'));
+let temp_recipes = []; //
 
 const concentrationUnitsMol = {
     M: 1,
@@ -21,11 +23,105 @@ const concentrationUnitsL = {
     uL: 0.000001,
 };
 
+
+// ------------- LOAD RECIPES ------------------------------
+
+// function that returns filtered recipes 
+function removeRecipeByName(recipeName) {
+    
+    // Function to check if a recipe's name is not equal to the provided name
+    function isNotRecipe(recipe) {
+        return recipe.name !== recipeName;
+    }
+
+    // Use the filter method to create a new array without the recipe with the provided name
+    return recipes.filter(isNotRecipe);
+}
+
+// Load and display the recipes when the page loads
+window.addEventListener('load', () => {
+    const storedRecipes = localStorage.getItem('recipes');
+    
+    if (storedRecipes) {
+        recipes = JSON.parse(storedRecipes);
+        temp_recipes = removeRecipeByName(recipeToEdit.name);
+    }
+
+    populateApplicationFieldDropdown();
+
+    populatePage()
+
+    // 
+
+    // // Enable the "Save Recipe" button and add its event listener
+    // const saveRecipeButton = document.getElementById('saveRecipeButton');
+    // saveRecipeButton.addEventListener('click', saveRecipe);
+
+    // Add event listener for application field change
+    const applicationField = document.getElementById('applicationField');
+    applicationField.addEventListener('change', handleApplicationFieldChange);
+});
+
+
+
+// ------------- FILL RECIPE ------------------------------
+
+// function that populate page 
+function populatePage() {
+
+    // Insert name
+    const recipeNameInput = document.getElementById('recipeName');
+    recipeNameInput.value = recipeToEdit.name;
+
+    // Insert application
+    const applicationField = document.getElementById('applicationField');
+    applicationField.value = recipeToEdit.application;
+
+    // Insert reagents
+    recipeToEdit.reagents.forEach((reagent) => { 
+
+        // Create new row
+        newRow = addReagentRow()
+
+        // Get variables
+        const reagentName = newRow.querySelector('.reagent-name-input');
+        const stockConcentrationValue = newRow.querySelector('.stock-concentration-value');
+        const stockConcentrationUnit = newRow.querySelector('.stock-concentration-unit');
+        const finalConcentrationValue = newRow.querySelector('.final-concentration-value');
+        const finalConcentrationUnit = newRow.querySelector('.final-concentration-unit');
+
+        // Fill values
+        reagentName.value = reagent.name;
+        stockConcentrationValue.value = reagent.stockConcentration.value;
+        stockConcentrationUnit.value = reagent.stockConcentration.unit;
+        finalConcentrationValue.value = reagent.finalConcentration.value;
+        finalConcentrationUnit.value = reagent.finalConcentration.unit;
+
+    });
+
+    // Insert steps
+    recipeToEdit.protocol.forEach((step) => {
+
+        // Create new step
+        newStep = addProtocolStep()
+
+        // Get variables
+        const stepInput = newStep.querySelector('.protocol-step-input')
+
+        // Fill step
+        stepInput.value = step
+
+    })
+
+}
+
+
+
 // ------------- RECIPE NAME ------------------------------
 
 // Function to check if the recipe name already exists
 function recipeNameExists(recipeName) {
-    return recipes.some((recipe) => recipe.name === recipeName);
+    return temp_recipes.some((recipe) => recipe.name === recipeName);
 }
 
 
@@ -186,7 +282,7 @@ function addReagentRow() {
             <div class="reagent-name-error" style="color: red;"></div>
         </td>
         <td>
-            <input type="number" required class="concentration stock-concentration-value">
+            <input type="number" step="0.0001" required class="concentration stock-concentration-value">
             <div class="stock-concentration-error" style="color: red;"></div>
         </td>
         <td>
@@ -194,7 +290,7 @@ function addReagentRow() {
             <div class="stock-concentration-unit-error" style="color: red;"></div>
         </td>
         <td>
-            <input type="number" required class="concentration final-concentration-value">
+            <input type="number" step="0.0001" required class="concentration final-concentration-value">
             <div class="final-concentration-error" style="color: red;"></div>
         </td>
         <td><select class="final-concentration-unit" required></select></td>
@@ -240,6 +336,8 @@ function addReagentRow() {
     const selectedIndex = firstSelect.selectedIndex;
     const optionsForSecondSelect = groupedOptions[selectedIndex];
     populateConcentrationUnitDropdown(secondSelect, optionsForSecondSelect);
+
+    return newRow
 }
 
 
@@ -448,6 +546,8 @@ function addProtocolStep() {
     <div class="protocol-step-error" style="color: red;"></div>
     `;
     protocolStepsList.appendChild(newStep);
+
+    return newStep
 }
 
 
@@ -536,19 +636,13 @@ function saveRecipe(event) {
         const stockConcentration = parseFloat(row.querySelector('.stock-concentration-value').value);
         const stockUnit = row.querySelector('.stock-concentration-unit').value;
         const finalConcentration = parseFloat(row.querySelector('.final-concentration-value').value);
-        const finalUnit = row.querySelector('.final-concentration-unit').value;
+        const finalUnit = row.querySelector('.final-concentration-value').value;
 
         reagents.push({
             name: name,
-            stockConcentration: {
-                value: stockConcentration,
-                unit: stockUnit,
-            },
+            stockConcentration: stockConcentration,
             stockUnit: stockUnit,
-            finalConcentration: {
-                value: finalConcentration,
-                unit: finalUnit,
-            },
+            finalConcentration: finalConcentration,
             finalUnit: finalUnit,
         });
     }
@@ -579,10 +673,10 @@ function saveRecipe(event) {
     };
 
     // Add the new recipe to the recipes array
-    recipes.push(newRecipe);
+    temp_recipes.push(newRecipe);
 
     // Save the updated recipes to local storage
-    localStorage.setItem('recipes', JSON.stringify(recipes));
+    localStorage.setItem('recipes', JSON.stringify(temp_recipes));
 
     // Prompt the user to download the new JSON file
     const blob = new Blob([JSON.stringify(recipes, null, 2)], { type: 'application/json' });
@@ -603,28 +697,10 @@ window.addEventListener('load', () => {
     if (storedRecipes) {
         recipes = JSON.parse(storedRecipes);
     }
-
-    populateApplicationFieldDropdown();
 });
 
 // Add form submission event listener
 document.getElementById('addRecipeForm').addEventListener('submit', saveRecipe);
 
 
-// Load and display the recipes when the page loads
-window.addEventListener('load', () => {
-    const storedRecipes = localStorage.getItem('recipes');
-    if (storedRecipes) {
-        recipes = JSON.parse(storedRecipes);
-    }
 
-    populateApplicationFieldDropdown();
-
-    // Enable the "Save Recipe" button and add its event listener
-    const saveRecipeButton = document.getElementById('saveRecipeButton');
-    saveRecipeButton.addEventListener('click', saveRecipe);
-
-    // Add event listener for application field change
-    const applicationField = document.getElementById('applicationField');
-    applicationField.addEventListener('change', handleApplicationFieldChange);
-});

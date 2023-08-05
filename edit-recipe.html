@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biochemical Solutions | Add recipe</title>
+</head>
+
+<body>
+
+    <h1>Edit Recipe</h1>
+    <form id="addRecipeForm">
+        <!-- Recipe Name -->
+        <label for="recipeName">Recipe Name:</label>
+        <input type="text" id="recipeName" required><br>
+        <div id="recipeNameError" style="color: red;"></div>
+
+        <!-- Application Field -->
+        <label for="applicationField">Application:</label>
+        <select id="applicationField" required>
+            <!-- Existing options will be dynamically populated via JavaScript -->
+        </select><br>
+        <input type="text" class="form-control mt-2" id="newApplicationInput" name="newApplicationInput"
+            placeholder="Enter a new application" style="display: none;">
+        <div id="applicationNameError" style="color: red;"></div>
+
+        <!-- Reagents -->
+        <h2>Reagents:</h2>
+        <div id="reagentsError" style="color: red;"></div>
+        <div id="reagentsError1" style="color: red;"></div>
+        <table id="reagentsTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Stock Concentration</th>
+                    <th>Stock Unit</th>
+                    <th>Final Concentration</th>
+                    <th>Final Unit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- The table rows will be dynamically added via JavaScript -->
+            </tbody>
+        </table>
+        <button type="button" onclick="addReagentRow()">Add Reagent</button><br>
+
+        <!-- Protocol Steps -->
+        <h2>Protocol Steps:</h2>
+        <div id="protocolError" style="color: red;"></div>
+        <ol id="protocolStepsList">
+            <!-- The list items will be dynamically added via JavaScript -->
+        </ol>
+        <button type="button" onclick="addProtocolStep()">Add Step</button><br>
+
+        <button type="submit" id="saveRecipeButton">Save Recipe</button>
+    </form>
+
+    <script src="edit-recipe.js"></script>
+
+</body>
+
+</html>
