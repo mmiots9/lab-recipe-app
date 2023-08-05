@@ -1,6 +1,26 @@
 // add_recipe.js
 let recipes = []; // Initialize the recipes array
 
+const concentrationUnitsMol = {
+    M: 1,
+    mM: 0.001,
+    uM: 0.000001,
+    nM: 0.000000001,
+};
+
+const concentrationUnitsGrams = {
+    g: 1,
+    mg: 0.001,
+    ug: 0.000001,
+    ng: 0.000000001,
+};
+
+const concentrationUnitsL = {
+    L: 1,
+    mL: 0.001,
+    uL: 0.000001,
+};
+
 // ------------- RECIPE NAME ------------------------------
 
 // Function to check if the recipe name already exists
@@ -98,6 +118,11 @@ function isApplicationNameValid() {
     const applicationName = newApplicationInput.value.trim();
     const applicationNameError = document.getElementById('applicationNameError');
 
+    if (selectedApplication === 'NULL') {
+        applicationNameError.textContent = 'Please select a valid application'
+        return false;
+    }
+
     // Return true if application choice is not "Other..."
     if (selectedApplication != 'Other...') {
         applicationNameError.textContent = '';
@@ -105,7 +130,6 @@ function isApplicationNameValid() {
     }
 
     // Check if application name input is valid
-     // TODO: Use the right error message
     if (applicationNameExists(applicationName)) {
         applicationNameError.textContent = 'An application with this name already exists.';
         return false;
@@ -155,15 +179,25 @@ function addReagentRow() {
     const id_number = document.querySelectorAll('.reagent-name-td').length + 1
 
     const newRow = reagentsTable.insertRow();
+    newRow.className = 'reagent-row';
     newRow.innerHTML = `
         <td class="reagent-name-td">
             <input type="text" required class="reagent-name-input" id = "reagent-name-${id_number}">
             <div class="reagent-name-error" style="color: red;"></div>
         </td>
-        <td><input type="number" required></td>
-        <td><select class="first-select" required></select></td>
-        <td><input type="number" required></td>
-        <td><select class="second-select" required></select></td>
+        <td>
+            <input type="number" required class="concentration stock-concentration-value">
+            <div class="stock-concentration-error" style="color: red;"></div>
+        </td>
+        <td>
+            <select class="stock-concentration-unit" required></select>
+            <div class="stock-concentration-unit-error" style="color: red;"></div>
+        </td>
+        <td>
+            <input type="number" required class="concentration final-concentration-value">
+            <div class="final-concentration-error" style="color: red;"></div>
+        </td>
+        <td><select class="final-concentration-unit" required></select></td>
         <td><button type="button" onclick="removeReagentRow(this)">Remove</button></td>
     `;
 
@@ -263,6 +297,132 @@ function areReagentNamesValid() {
 
 
 // TODO: Function to check if all values for concentration are inserted and valid
+function areConcentrationValuesValid() {
+    let areValid = true;
+    const finalVolume = 1; // set final volume to check if the solution is ok
+    let testVolume = 0; // set test starting volume
+
+    const reagentErrorElement = document.getElementById('reagentsError');
+
+    // TODO: For each row, 
+    const reagentRows = document.querySelectorAll('.reagent-row');
+
+    reagentRows.forEach((row) => {
+        const stockConcentrationInput = row.querySelector('.stock-concentration-value');
+        const finalConcentrationInput = row.querySelector('.final-concentration-value');
+        const stockConcentrationValue = parseFloat(stockConcentrationInput.value);
+        const finalConcentrationValue = parseFloat(finalConcentrationInput.value);
+        const stockConcentrationUnit = row.querySelector('.stock-concentration-unit').value;
+        const finalConcentrationUnit = row.querySelector('.final-concentration-unit').value;
+        const stockConcentrationErrorElement = row.querySelector('.stock-concentration-error');
+        const finalConcentrationErrorElement = row.querySelector('.final-concentration-error');
+        const stockConcentrationUnitErrorElement = row.querySelector('.stock-concentration-unit-error');
+        
+
+        // check if are valid values (> 0 and not empty). 
+        if (stockConcentrationValue <= 0) {
+            stockConcentrationErrorElement.textContent = 'Concentration values must be > 0';
+            areValid = false;
+        } else if (isNaN(stockConcentrationValue)) {
+            stockConcentrationErrorElement.textContent = 'Concentration value cannot be empty';
+            areValid = false;
+        } else {
+            stockConcentrationErrorElement.textContent = '';
+        }
+
+        if (finalConcentrationValue <= 0) {
+            finalConcentrationErrorElement.textContent = 'Concentration values must be > 0';
+            areValid = false;
+        } else if (isNaN(finalConcentrationValue)) {
+            finalConcentrationErrorElement.textContent = 'Concentration value cannot be empty';
+            areValid = false;
+        } else {
+            finalConcentrationErrorElement.textContent = '';
+        }
+
+        // check if stock concentration unit is not ---
+        if (stockConcentrationUnit === '---') {
+            stockConcentrationUnitErrorElement.textContent = 'Please select the stock concentration unit';
+            areValid = false;
+            return
+        } else {
+            stockConcentrationUnitErrorElement.textContent = '';
+        }
+
+        // return if any of the previous condition is met, to avoid doing calculations on non-valid values
+        if (stockConcentrationValue <= 0 || isNaN(stockConcentrationValue) || 
+        finalConcentrationValue <= 0 || isNaN(finalConcentrationValue)) {
+            return
+        }
+
+        // TODO: Check if final concentration is < stock concentration
+        if (stockConcentrationUnit === 'g/mol') {
+            return
+        } else if (concentrationUnitsMol.hasOwnProperty(stockConcentrationUnit)) { // if M to M
+
+            // Convert stockConcentrationValue to M
+            stockM = stockConcentrationValue * concentrationUnitsMol[stockConcentrationUnit];
+
+            // Convert finalConcentrationValue to M
+            finalM = finalConcentrationValue * concentrationUnitsMol[finalConcentrationUnit];
+
+            // Check if finalM > stockM
+            if (finalM > stockM) {
+                finalConcentrationErrorElement.textContent = 'Final concentration cannot be greater than stock';
+                areValid = false;
+            } else {
+                finalConcentrationErrorElement.textContent = '';
+            }
+
+            // Calculate final volume
+            testVolume += finalM * finalVolume / stockM; // in L
+
+        } else if (stockConcentrationUnit === 'X') { // if X
+
+            // Check if finalValue is greater than stockVale
+            if (finalConcentrationValue >= stockConcentrationValue) {
+                finalConcentrationErrorElement.textContent = 'Final concentration cannot be greater than/equal to stock';
+                areValid = false;
+            } else {
+                finalConcentrationErrorElement.textContent = '';
+            }
+
+            testVolume += finalConcentrationValue * finalVolume / stockConcentrationValue;
+
+        } else { // if g/l to g/l
+            // Split units
+            const stockUnits = stockConcentrationUnit.split('/');
+            const finalUnits = finalConcentrationUnit.split('/');
+
+            // Convert stock and final to g/L
+            const stockGL = stockConcentrationValue / (1 / concentrationUnitsGrams[stockUnits[0]]) / concentrationUnitsL[stockUnits[1]];
+            const finalGL = finalConcentrationValue / (1 / concentrationUnitsGrams[finalUnits[0]]) / concentrationUnitsL[finalUnits[1]];
+
+            // Check if finalValue is greater than stockVale
+            if (finalGL >= stockGL) {
+                finalConcentrationErrorElement.textContent = 'Final concentration cannot be greater than/equal to stock';
+                areValid = false;
+            } else {
+                finalConcentrationErrorElement.textContent = '';
+            }
+
+            // Calculate quantity to take
+            testVolume += finalGL * finalVolume / stockGL
+            
+        }
+
+    })
+
+    // check if testVolume is > finalVolume
+    if (testVolume > finalVolume) {
+        reagentErrorElement.textContent = 'The sum of all the reagents is higher than the possible final volume'
+        areValid = false;
+    } else {
+        reagentErrorElement.textContent = ''
+    }
+    console.log(testVolume)
+    return areValid;
+}
 
 
 
@@ -279,7 +439,7 @@ function addProtocolStep() {
 
 
 
-
+// ------------- SAVE ------------------------------
 
 
 
