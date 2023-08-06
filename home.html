@@ -5,27 +5,83 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Biochemical Solutions | Home</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/home.css">
 </head>
 
 <body>
-    <h1>Biochemical Solutions</h1>
+    <header>
+        <nav>
+            <a href="home.html" id="home-nav">Home</a>
+            <a href="index.html" id="exit-nav">Exit</a>
+        </nav>
 
+        
+
+    </header>
+    <main>
+    
+
+    <h1>Recipe Selection</h1>
+
+    <div>
     <button><a href="add-recipe.html">Add recipe</a></button>
     <button><a href="index.html">Select file</a></button>
-
-    <h2>Recipe Selection</h2>
-    <div id="search-bar">
-        <input type="text" id="searchInput" oninput="searchSolutions()" placeholder="Search for solutions...">
-        <div id="applicationFilter"></div> <!-- Add this line -->
-    </div>
-    <div id="recipes">
-        <ul id="recipes-ul">
-        </ul>
-        <!-- The dynamically generated list of matching solutions will appear here -->
     </div>
 
+    
+    
+    <!-- Left column with filters -->
+    <div class="column" id="left">
+        <div id="application-filter-div">
+            <h2 id="application-title">Application</h2>
+            <ul id="application-filter-ul">
 
-    <script src="search-recipe.js"></script>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Right column with recipe names -->
+    <div class="column" id="right">
+
+        <!-- Show/hide left column -->
+        <div id="show-hide">
+            <div id="triangle"></div>
+        </div>
+
+        <div id="search-bar">
+            <input type="text" id="searchInput" oninput="searchSolutions()" placeholder="Search for solutions...">
+        </div>
+
+        <div id="recipes">
+            <table id="recipes-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Application</th>
+                        <th>Date added</th>
+                        <th>Last modify</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- The table rows will be dynamically added via JavaScript -->
+                </tbody>
+
+            </table>
+            <ul id="recipes-ul">
+                <!-- The dynamically generated list of matching solutions will appear here -->
+            </ul>
+        
+        </div>
+    </div>  
+
+    <script src="static/js/home.js"></script>
+    </main>
+
+    <footer>
+        &copy; Matteo Miotto 2023, All rights reserved
+    </footer>
 </body>
 
 </html>

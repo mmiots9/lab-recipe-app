@@ -1,0 +1,102 @@
+/* Columns */
+#left {
+    border-right: 2px solid #03045e;
+    float: left;
+    height: 70vh;
+    overflow: scroll;
+    padding: 0.5rem 0.5rem;
+    width: 20%;
+}
+
+.column-hide {
+    width: 0% !important;
+    padding: 0% !important;
+}
+
+#right {
+    float: left;
+    height: 71vh;
+    overflow: scroll;
+    padding: 0rem 2rem;
+    width: 80%;
+}
+
+.column-full {
+    width: 99% !important;
+}
+
+
+
+/* Show-hide filter button */
+#show-hide {
+    align-items: center;
+    background-color: #ade8f4;
+    border: 1px solid gray;
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    display: flex;
+    height: 5rem;
+    justify-content: center;
+    left: 20%;
+    position: absolute;
+    top: 48%;
+    width: 0.9rem;
+}
+
+#show-hide:hover {
+    background-color: #48cae4;
+    cursor: pointer;
+}
+
+#triangle {
+    position: relative;
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 6px solid black;
+    transform: rotate(0deg);
+}
+
+.point-right {
+    border-right: 0px !important;
+    border-left: 6px solid black !important;
+}
+
+.btn-left {
+    left: 0% !important;
+}
+
+
+
+/* Left column */
+#application-title {
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.application-label {
+    margin: 0.2rem auto;
+    font-size: 1.1rem;
+}
+
+
+
+/* Right column */
+#search-bar {
+    height: 2rem;
+    margin-bottom: 2rem;
+}
+
+#searchInput {
+    float: right;
+    height: 2rem;
+    width: 40%;
+}
+
+/* Recipe table */
+#recipes-table {
+    text-align: center;
+    width: 100%;
+}

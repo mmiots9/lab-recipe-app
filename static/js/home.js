@@ -33,19 +33,33 @@ function compareRecipeNames(recipeA, recipeB) {
 
 // function to diplay recipes as list
 function displayRecipes(recipesToShow) {
-    const recipesUl = document.getElementById('recipes-ul');
-    recipesUl.innerHTML = '';
+    const recipesTable = document.getElementById('recipes-table').getElementsByTagName('tbody')[0];
+    recipesTable.innerHTML = '';
 
     // Update shown recipes
     shownRecipes = recipesToShow
 
     recipesToShow.forEach((recipe, index) => {
-        const recipeLi = document.createElement('li');
-        recipeLi.innerHTML = `
-        <li>
-            <button onclick="selectRecipe(${index})">${recipe.name}</button>
-        </li>`;
-        recipesUl.appendChild(recipeLi);
+        const newRow = recipesTable.insertRow();
+        newRow.className = 'recipe-row';
+        newRow.innerHTML = `
+        <td class="recipe-name">
+            ${recipe.name}
+        </td>
+        <td class="recipe-application">
+            ${recipe.application}
+        </td>
+        <td class="recipe-date-added">
+            ${recipe.date_added}
+        </td>
+        <td class="recipe-date-modified">
+            ${recipe.date_modified}
+        </td>
+        <td class="recipe-actions">
+            <button class="recipe-btn" onclick="selectRecipe(${index})">Calc</button>
+        </td>
+        `
+        recipesTable.appendChild(newRow);
     });
 
     // TODO: if empty, show message
@@ -90,20 +104,29 @@ document.getElementById('searchInput').addEventListener('input', () => {
 // function to show possible application values
 function showApplications() {
     // Update the application filter checkboxes
-    const applicationFilter = document.getElementById('applicationFilter');
+    const applicationFilter = document.getElementById('application-filter-ul');
+
     applicationFilter.innerHTML = '';
-    const applications = Array.from(new Set(recipes.map((recipe) => recipe.application)));
-    
-    applications.forEach((application) => {
-        const checkboxLabel = document.createElement('label');
-        checkboxLabel.innerHTML = `<input type="checkbox" name="applications" value="${application}" onclick="filterByApplication(this)"> ${application}`;
-        applicationFilter.appendChild(checkboxLabel);
-    });
+    const applications = Array.from(new Set(recipes.map((recipe) => recipe.application))).sort();
 
     // Add an "All" checkbox
+    const allCheckboxLi = document.createElement('li');
     const allCheckboxLabel = document.createElement('label');
+    allCheckboxLabel.className = 'application-label';
     allCheckboxLabel.innerHTML = `<input type="checkbox" name="applications" value="" onclick="showAllApplication()" checked> All`;
-    applicationFilter.appendChild(allCheckboxLabel);
+    allCheckboxLi.appendChild(allCheckboxLabel);
+    applicationFilter.appendChild(allCheckboxLi);
+    
+    applications.forEach((application) => {
+        const checkboxLi = document.createElement('li');
+        const checkboxLabel = document.createElement('label');
+        checkboxLabel.className = 'application-label';
+        checkboxLabel.innerHTML = `<input type="checkbox" name="applications" value="${application}" onclick="filterByApplication(this)"> ${application}`;
+
+        checkboxLi.appendChild(checkboxLabel);
+        applicationFilter.appendChild(checkboxLi);
+    });
+
 }
 
 
