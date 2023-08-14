@@ -163,3 +163,19 @@ function showAllApplication() {
     searchSolutions()
 
 }
+
+
+// Show-hide filter bar
+const leftCol = document.getElementById("left");
+const rightCol = document.getElementById("right");
+const showHideButton = document.getElementById("show-hide");
+const appFilters = document.getElementById("application-filter-ul");
+
+showHideButton.addEventListener("click", () => {
+    console.log('click')
+    showHideButton.classList.toggle('btn-left');
+    appFilters.classList.toggle('app-hide');
+    leftCol.classList.toggle('column-hide');
+    rightCol.classList.toggle('column-full');
+    
+});

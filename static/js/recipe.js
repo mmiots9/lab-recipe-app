@@ -27,44 +27,59 @@ function calculateConcentrationConversionFactor(stockConcentration) {
 }
 
 function populateRecipeDetailsPage() {
-    const recipeDetailsDiv = document.getElementById('recipeDetails');
-    recipeDetailsDiv.innerHTML = '';
+    const recipeTitle = document.getElementById('recipe-title');
+    const applicationName = document.getElementById('application-name');
+    const reagentsTable = document.getElementById('reagents-table').getElementsByTagName('tbody')[0];
+    const protocolList = document.getElementById('protocol-list')
+
+    recipeTitle.innerHTML = '';
+    applicationName.innerHTML = '';
+    reagentsTable.innerHTML = '';
+    protocolList.innerHTML = '';
 
     const selectedRecipe = JSON.parse(localStorage.getItem('selectedRecipe'));
 
     if (!selectedRecipe) {
-        recipeDetailsDiv.innerHTML = 'No recipe selected.';
+        reagentsTable.innerHTML = 'No recipe selected.';
         return;
     }
 
-    recipeDetailsDiv.innerHTML = `<h3>${selectedRecipe.name}</h3>`;
-    recipeDetailsDiv.innerHTML += `<p>Application: ${selectedRecipe.application}</p>`;
+    recipeTitle.innerHTML = `${selectedRecipe.name}`;
+    applicationName.innerHTML = `${selectedRecipe.application}`;
+
+    if (selectedRecipe.reagents && selectedRecipe.reagents.length > 0) {
+        selectedRecipe.reagents.forEach((reagent) => {
+            const newRow = reagentsTable.insertRow();
+            newRow.className = 'reagent-row';
+            newRow.innerHTML = `
+            <td class="reagent-name">
+                ${reagent.name}
+            </td>
+            <td class="reagent-stock-concentration">
+                <span>${reagent.stockConcentration.value}</span> ${reagent.stockConcentration.unit}
+            </td>
+            <td class="reagent-final-concentration">
+                <span>${reagent.finalConcentration.value}</span> ${reagent.finalConcentration.unit}
+            </td>
+            <td class="reagent-to-take">
+                <span id="${reagent.name}-quantity"></span>
+            </td>
+            `;
+
+        reagentsTable.appendChild(newRow);
+        });
+    }
 
     const protocolSteps = selectedRecipe.protocol;
     if (protocolSteps && protocolSteps.length > 0) {
-        recipeDetailsDiv.innerHTML += '<h4>Protocol:</h4>';
-        const protocolList = document.createElement('ol');
         protocolSteps.forEach((step) => {
             const stepItem = document.createElement('li');
             stepItem.textContent = step;
             protocolList.appendChild(stepItem);
         });
-        recipeDetailsDiv.appendChild(protocolList);
     }
 
-    if (selectedRecipe.reagents && selectedRecipe.reagents.length > 0) {
-        recipeDetailsDiv.innerHTML += '<h4>Reagents:</h4>';
-        selectedRecipe.reagents.forEach((reagent) => {
-            const reagentDiv = document.createElement('div');
-            reagentDiv.innerHTML = `
-        <strong>${reagent.name}</strong><br>
-        Stock Concentration: <span>${reagent.stockConcentration.value}</span> ${reagent.stockConcentration.unit}<br>
-        Final Concentration: <span>${reagent.finalConcentration.value}</span> ${reagent.finalConcentration.unit}<br>
-        Quantity to Take: <span id="${reagent.name}-quantity"></span>
-      `;
-            recipeDetailsDiv.appendChild(reagentDiv);
-        });
-    }
+    
 }
 
 function calculateReagentQuantities() {

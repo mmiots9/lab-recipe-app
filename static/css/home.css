@@ -1,16 +1,20 @@
 /* Columns */
 #left {
-    border-right: 2px solid #03045e;
+    position: relative;
+    background-color: #C0A9B0;
+    border: 8px solid #BCC4DB;
     float: left;
     height: 70vh;
+    margin-top: 1%;
     overflow: scroll;
-    padding: 0.5rem 0.5rem;
-    width: 20%;
+    transition: 0.3s ease;
+    width: 22%;
 }
 
 .column-hide {
     width: 0% !important;
     padding: 0% !important;
+    transform: translateX(-40%);
 }
 
 #right {
@@ -18,56 +22,45 @@
     height: 71vh;
     overflow: scroll;
     padding: 0rem 2rem;
-    width: 80%;
+    width: 78%;
+
+    transition: 0.3s ease;
 }
 
 .column-full {
-    width: 99% !important;
+    width: 98% !important;
 }
-
-
 
 /* Show-hide filter button */
 #show-hide {
     align-items: center;
-    background-color: #ade8f4;
-    border: 1px solid gray;
+    border: solid #BCC4DB;
+    border-width: 4px 4px 4px 0px;
     border-top-right-radius: 0.5rem;
     border-bottom-right-radius: 0.5rem;
     display: flex;
     height: 5rem;
     justify-content: center;
-    left: 20%;
+    left: 22%;
     position: absolute;
     top: 48%;
     width: 0.9rem;
+
+    transition: 0.3s ease;
 }
 
 #show-hide:hover {
-    background-color: #48cae4;
     cursor: pointer;
 }
 
-#triangle {
-    position: relative;
-    width: 0;
-    height: 0;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-right: 6px solid black;
-    transform: rotate(0deg);
-}
-
-.point-right {
-    border-right: 0px !important;
-    border-left: 6px solid black !important;
-}
-
 .btn-left {
-    left: 0% !important;
+    left: 0.5% !important;
 }
 
 
+.app-hide {
+    display: none;
+}
 
 /* Left column */
 #application-title {
@@ -76,12 +69,23 @@
     text-align: center;
 }
 
+#application-filter-ul li {
+    list-style: none;
+    margin-bottom: 0.3rem;
+}
+
 .application-label {
-    margin: 0.2rem auto;
     font-size: 1.1rem;
 }
 
-
+#drawer-bottom {
+    background-color: #BCC4DB;
+    border: 1px solid #ccc;
+    height: 95%;
+    width: 90%;
+    padding: 0.5rem 0.5rem;
+    margin: 5% auto 5% 0;
+}
 
 /* Right column */
 #search-bar {
@@ -98,5 +102,6 @@
 /* Recipe table */
 #recipes-table {
     text-align: center;
+    font-size: 1.1rem;
     width: 100%;
 }

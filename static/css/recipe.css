@@ -1,0 +1,72 @@
+/* Info */
+#info {
+    padding: 1rem 2rem;
+    margin: 1rem auto;
+}
+
+#application {
+    display: inline;
+    float: left;
+    font-size: 1.1rem;
+}
+
+#application-name {
+    font-weight: bold;
+}
+
+#edit-btn {
+    float: right;
+    margin-right: 2rem;
+    width: 3rem;
+    height: 1.4rem;
+    background-color: #7880B5;
+    border: none;
+    text-decoration: none;
+}
+
+#edit-btn a {
+    font-size: 1rem;
+    color: white;
+    text-decoration: none;
+    width: 100%;
+}
+
+
+
+/* Reagents */
+#reagents-div {
+    padding: 0 2rem;
+}
+
+#reagents-div h2 {
+    margin: 0.6rem auto;
+}
+
+#reagents-table {
+    margin: 1rem auto;
+    text-align: center;
+    font-size: 1.2rem;
+    width: 90%;
+    table-layout: fixed;
+}
+
+.reagent-row {
+    line-height: 1.8rem;
+}
+
+
+
+/* Protocol */
+#protocol-div {
+    margin: 1rem 2rem;
+}
+
+#protocol-list {
+    margin-top: 0.5rem;
+    padding-left: 1rem;
+    font-size: 1.2rem;
+}
+
+#protocol-list li {
+    line-height: 1.8rem;
+}
