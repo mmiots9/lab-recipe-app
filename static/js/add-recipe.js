@@ -198,7 +198,7 @@ function addReagentRow() {
             <div class="final-concentration-error" style="color: red;"></div>
         </td>
         <td><select class="final-concentration-unit" required></select></td>
-        <td><button type="button" onclick="removeReagentRow(this)">Remove</button></td>
+        <td><button class="remove-reagent-btn" type="button" onclick="removeReagentRow(this)">Remove</button></td>
     `;
 
     // Populate select unit fields

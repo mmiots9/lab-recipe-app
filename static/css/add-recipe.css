@@ -1,0 +1,90 @@
+/* Form */
+#addRecipeForm {
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+}
+
+
+
+/* Info div */
+#recipe-name-div {
+    display: inline-block;
+}
+
+#application-div {
+    float: right;
+    margin-right: 2rem;
+}
+
+#info {
+    height: 5rem;
+}
+
+#info input {
+    width: 12.5rem;
+}
+
+
+
+/* Reagents */
+#reagentsTable {
+    margin: 1rem auto 2rem;
+    text-align: center;
+    width: 90%;
+    table-layout: fixed;
+}
+
+.reagent-row {
+    line-height: 1.8rem;
+}
+
+button {
+    width: 8rem;
+    height: 1.5rem;
+    background-color: #7880B5;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+#reagent-btn {
+    margin-bottom: 1.5rem;
+}
+
+
+
+/* Protocol */
+#protocolStepsList {
+    margin-top: 0.7rem;
+    padding-left: 1.4rem;
+}
+
+#protocolStepsList li{
+    line-height: 1.8rem;
+}
+
+.protocol-step-input {
+    width: 75%;
+    margin-right: 3rem;
+    height: 1.5rem;
+}
+
+#step-btn {
+    margin-top: 1rem;
+}
+
+
+
+/* Save recipe */
+#save-div {
+    display: flex;
+    margin-top: 2rem;
+    justify-content: center;
+}
+
+
+#saveRecipeButton {
+    width: 10rem;
+}
+

@@ -44,8 +44,7 @@ nav a {
 /* Main */
 main {
     background-color: #6BBAEC;
-    height: 89vh;
-    max-height: 89vh;
+    min-height: 89vh;
     margin-top: 3rem;
 }
 
